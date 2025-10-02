@@ -1,17 +1,16 @@
 openapi: 3.0.3
 info:
   title: Routine & Alert API
-  version: 1.0.0
+  version: 1.0.2
   description: >
-    API di esempio generate dalle classi Java `Routine`, `Alert`, `CondizioniMeteo`.
-    ATTENZIONE: `Alert` appare autorefenziale (Alert -> List<Alert>). Per evitare
-    ricorsione infinita nello schema, si usa `AlertSummary` dove serve.
+    API per la gestione di Routine, Alert e Condizioni Meteo.
+    Le relazioni tra entità sono rappresentate tramite ID per semplicità e massima compatibilità con gli strumenti (Swagger UI/Codegen/Generator).
 
 servers:
-  - url: https://api.example.com
-    description: Production
   - url: http://localhost:8080
     description: Local
+  - url: https://api.example.com
+    description: Production
 
 tags:
   - name: Routines
@@ -30,7 +29,8 @@ paths:
             application/json:
               schema:
                 type: array
-                items: { $ref: '#/components/schemas/Routine' }
+                items:
+                  $ref: '#/components/schemas/Routine'
     post:
       tags: [Routines]
       summary: Crea routine
@@ -38,91 +38,88 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/RoutineCreate' }
+            schema:
+              $ref: '#/components/schemas/RoutineCreate'
       responses:
         '201':
           description: Creato
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Routine' }
+              schema:
+                $ref: '#/components/schemas/Routine'
 
   /routines/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: integer, format: int64 }
     get:
       tags: [Routines]
       summary: Dettaglio routine
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer, format: int64 }
       responses:
         '200':
           description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Routine' }
-        '404': { description: Non trovata }
+              schema:
+                $ref: '#/components/schemas/Routine'
+        '404':
+          description: Non trovata
     put:
       tags: [Routines]
       summary: Sostituisce una routine (PUT)
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer, format: int64 }
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/RoutineUpdate' }
+            schema:
+              $ref: '#/components/schemas/RoutineUpdate'
       responses:
         '200':
           description: Aggiornata
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Routine' }
-        '404': { description: Non trovata }
+              schema:
+                $ref: '#/components/schemas/Routine'
+        '404':
+          description: Non trovata
     patch:
       tags: [Routines]
       summary: Aggiorna parzialmente una routine (PATCH)
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer, format: int64 }
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/RoutinePatch' }
+            schema:
+              $ref: '#/components/schemas/RoutinePatch'
       responses:
         '200':
           description: Aggiornata
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Routine' }
-        '404': { description: Non trovata }
+              schema:
+                $ref: '#/components/schemas/Routine'
+        '404':
+          description: Non trovata
     delete:
       tags: [Routines]
       summary: Elimina routine
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer, format: int64 }
       responses:
-        '204': { description: Eliminata }
-        '404': { description: Non trovata }
+        '204':
+          description: Eliminata
+        '404':
+          description: Non trovata
 
   /routines/{id}/alerts:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: integer, format: int64 }
     get:
       tags: [Routines, Alerts]
-      summary: Lista alert della routine
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer, format: int64 }
+      summary: Lista degli alert associati alla routine
       responses:
         '200':
           description: OK
@@ -130,28 +127,28 @@ paths:
             application/json:
               schema:
                 type: array
-                items: { $ref: '#/components/schemas/Alert' }
-        '404': { description: Routine non trovata }
+                items:
+                  $ref: '#/components/schemas/Alert'
+        '404':
+          description: Routine non trovata
     post:
       tags: [Routines, Alerts]
-      summary: Aggiunge un alert alla routine
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer, format: int64 }
+      summary: Aggiunge un nuovo alert alla routine
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/AlertCreate' }
+            schema:
+              $ref: '#/components/schemas/AlertCreate'
       responses:
         '201':
           description: Creato
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Alert' }
-        '404': { description: Routine non trovata }
+              schema:
+                $ref: '#/components/schemas/Alert'
+        '404':
+          description: Routine non trovata
 
   /alerts:
     get:
@@ -164,7 +161,8 @@ paths:
             application/json:
               schema:
                 type: array
-                items: { $ref: '#/components/schemas/Alert' }
+                items:
+                  $ref: '#/components/schemas/Alert'
     post:
       tags: [Alerts]
       summary: Crea alert
@@ -172,91 +170,88 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/AlertCreate' }
+            schema:
+              $ref: '#/components/schemas/AlertCreate'
       responses:
         '201':
           description: Creato
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Alert' }
+              schema:
+                $ref: '#/components/schemas/Alert'
 
   /alerts/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: integer, format: int64 }
     get:
       tags: [Alerts]
       summary: Dettaglio alert
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer, format: int64 }
       responses:
         '200':
           description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Alert' }
-        '404': { description: Non trovato }
+              schema:
+                $ref: '#/components/schemas/Alert'
+        '404':
+          description: Non trovato
     put:
       tags: [Alerts]
       summary: Sostituisce un alert (PUT)
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer, format: int64 }
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/AlertUpdate' }
+            schema:
+              $ref: '#/components/schemas/AlertUpdate'
       responses:
         '200':
           description: Aggiornato
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Alert' }
-        '404': { description: Non trovato }
+              schema:
+                $ref: '#/components/schemas/Alert'
+        '404':
+          description: Non trovato
     patch:
       tags: [Alerts]
       summary: Aggiorna parzialmente un alert (PATCH)
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer, format: int64 }
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/AlertPatch' }
+            schema:
+              $ref: '#/components/schemas/AlertPatch'
       responses:
         '200':
           description: Aggiornato
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Alert' }
-        '404': { description: Non trovato }
+              schema:
+                $ref: '#/components/schemas/Alert'
+        '404':
+          description: Non trovato
     delete:
       tags: [Alerts]
       summary: Elimina alert
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer, format: int64 }
       responses:
-        '204': { description: Eliminato }
-        '404': { description: Non trovato }
+        '204':
+          description: Eliminato
+        '404':
+          description: Non trovato
 
   /alerts/{id}/children:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: integer, format: int64 }
     get:
       tags: [Alerts]
-      summary: Restituisce gli alert figli (autoref.) di un alert
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer, format: int64 }
+      summary: Restituisce gli ID degli alert figli
       responses:
         '200':
           description: OK
@@ -264,8 +259,11 @@ paths:
             application/json:
               schema:
                 type: array
-                items: { $ref: '#/components/schemas/Alert' }
-        '404': { description: Non trovato }
+                items:
+                  type: integer
+                  format: int64
+        '404':
+          description: Non trovato
 
   /condizioni-meteo:
     get:
@@ -278,7 +276,8 @@ paths:
             application/json:
               schema:
                 type: array
-                items: { $ref: '#/components/schemas/CondizioniMeteo' }
+                items:
+                  $ref: '#/components/schemas/CondizioniMeteo'
     post:
       tags: [Condizioni Meteo]
       summary: Crea condizione meteo
@@ -286,61 +285,60 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/CondizioniMeteo' }
+            schema:
+              $ref: '#/components/schemas/CondizioniMeteo'
       responses:
         '201':
           description: Creato
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/CondizioniMeteo' }
+              schema:
+                $ref: '#/components/schemas/CondizioniMeteo'
 
   /condizioni-meteo/{codice}:
+    parameters:
+      - in: path
+        name: codice
+        required: true
+        schema: { type: integer, format: int64 }
     get:
       tags: [Condizioni Meteo]
       summary: Dettaglio condizione meteo
-      parameters:
-        - in: path
-          name: codice
-          required: true
-          schema: { type: integer, format: int64 }
       responses:
         '200':
           description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/CondizioniMeteo' }
-        '404': { description: Non trovato }
+              schema:
+                $ref: '#/components/schemas/CondizioniMeteo'
+        '404':
+          description: Non trovato
     put:
       tags: [Condizioni Meteo]
       summary: Sostituisce condizione meteo (PUT)
-      parameters:
-        - in: path
-          name: codice
-          required: true
-          schema: { type: integer, format: int64 }
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/CondizioniMeteo' }
+            schema:
+              $ref: '#/components/schemas/CondizioniMeteo'
       responses:
         '200':
           description: Aggiornato
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/CondizioniMeteo' }
-        '404': { description: Non trovato }
+              schema:
+                $ref: '#/components/schemas/CondizioniMeteo'
+        '404':
+          description: Non trovato
     delete:
       tags: [Condizioni Meteo]
       summary: Elimina condizione meteo
-      parameters:
-        - in: path
-          name: codice
-          required: true
-          schema: { type: integer, format: int64 }
       responses:
-        '204': { description: Eliminato }
-        '404': { description: Non trovato }
+        '204':
+          description: Eliminato
+        '404':
+          description: Non trovato
 
 components:
   schemas:
@@ -352,4 +350,125 @@ components:
           format: int64
           example: 123
         nomeRoutine:
-          type: st
+          type: string
+          example: Routine Mattutina
+        alertIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+          example: [10, 11]
+      required: [id, nomeRoutine]
+
+    RoutineCreate:
+      type: object
+      properties:
+        nomeRoutine:
+          type: string
+          example: Routine Mattutina
+        alertIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+      required: [nomeRoutine]
+
+    RoutineUpdate:
+      allOf:
+        - $ref: '#/components/schemas/RoutineCreate'
+
+    RoutinePatch:
+      type: object
+      properties:
+        nomeRoutine:
+          type: string
+        alertIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+
+    Alert:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 987
+        titolo:
+          type: string
+          example: Allerta Pioggia
+        descrizione:
+          type: string
+          example: Avvisami quando piove entro 5km.
+        attivo:
+          type: boolean
+          example: true
+        childrenIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+          example: [1001, 1002]
+        condizioneMeteoCodice:
+          type: integer
+          format: int64
+          description: FK verso CondizioniMeteo.codice
+          example: 1
+      required: [id, titolo, attivo]
+
+    AlertCreate:
+      type: object
+      properties:
+        titolo:
+          type: string
+          example: Allerta Pioggia
+        descrizione:
+          type: string
+        attivo:
+          type: boolean
+          default: true
+        childrenIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        condizioneMeteoCodice:
+          type: integer
+          format: int64
+      required: [titolo]
+
+    AlertUpdate:
+      allOf:
+        - $ref: '#/components/schemas/AlertCreate'
+
+    AlertPatch:
+      type: object
+      properties:
+        titolo:
+          type: string
+        descrizione:
+          type: string
+        attivo:
+          type: boolean
+        childrenIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        condizioneMeteoCodice:
+          type: integer
+          format: int64
+
+    CondizioniMeteo:
+      type: object
+      properties:
+        codice:
+          type: integer
+          format: int64
+          example: 1
+        tipo:
+          type: string
+          enum: [SOLEGGIATO, PARZIALMENTE_NUVOLOSO, NUVOLOSO]
+          example: SOLEGGIATO
+      required: [codice, tipo]

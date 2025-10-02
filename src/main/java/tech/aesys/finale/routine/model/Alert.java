@@ -22,7 +22,7 @@ public @Data class Alert implements Serializable {
     private LocalDateTime oraFine;
 
     @ElementCollection
-    @CollectionTable(name = "alert_codici", joinColumns = @JoinColumn(name = "alert_id"))
+    @CollectionTable(name = "alert_codici", joinColumns = @JoinColumn(name = "codiceId"))
     @Column(name = "codice", nullable = false)
     private Set<String> codici;
 
@@ -33,3 +33,4 @@ public @Data class Alert implements Serializable {
     private String citta;
 
 }
+
