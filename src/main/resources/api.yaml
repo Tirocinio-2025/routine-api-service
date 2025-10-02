@@ -1,37 +1,24 @@
 openapi: 3.0.3
 info:
   title: Routine & Alert API
-  version: 1.0.2
+  version: 1.0.7
   description: >
-    API per la gestione di Routine, Alert e Condizioni Meteo.
-    Le relazioni tra entità sono rappresentate tramite ID per semplicità e massima compatibilità con gli strumenti (Swagger UI/Codegen/Generator).
+    API per la gestione di Routine e Alert.
+    Nessun campo 'id' è mai presente nei payload di risposta; gli 'id' esistono
+    solo come path parameters per indirizzare le risorse.
 
 servers:
   - url: http://localhost:8080
     description: Local
-  - url: https://api.example.com
-    description: Production
 
 tags:
   - name: Routines
   - name: Alerts
-  - name: Condizioni Meteo
 
 paths:
   /routines:
-    get:
-      tags: [Routines]
-      summary: Lista routine
-      responses:
-        '200':
-          description: Elenco routine
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Routine'
     post:
+      operationId: createRoutine
       tags: [Routines]
       summary: Crea routine
       requestBody:
@@ -40,6 +27,15 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RoutineCreate'
+            example:
+              nomeRoutine: "nome"
+              alerts:
+                - oraInizio: "14:00"
+                  oraFine: "18:00"
+                  codici:
+                    - descrizione: 1
+                  testoNotifica: "testo recuperato da risposta API"
+                  citta: "Silvi"
       responses:
         '201':
           description: Creato
@@ -55,6 +51,7 @@ paths:
         required: true
         schema: { type: integer, format: int64 }
     get:
+      operationId: getRoutine
       tags: [Routines]
       summary: Dettaglio routine
       responses:
@@ -67,6 +64,7 @@ paths:
         '404':
           description: Non trovata
     put:
+      operationId: replaceRoutine
       tags: [Routines]
       summary: Sostituisce una routine (PUT)
       requestBody:
@@ -85,6 +83,7 @@ paths:
         '404':
           description: Non trovata
     patch:
+      operationId: updateRoutine
       tags: [Routines]
       summary: Aggiorna parzialmente una routine (PATCH)
       requestBody:
@@ -103,6 +102,7 @@ paths:
         '404':
           description: Non trovata
     delete:
+      operationId: deleteRoutine
       tags: [Routines]
       summary: Elimina routine
       responses:
@@ -118,6 +118,7 @@ paths:
         required: true
         schema: { type: integer, format: int64 }
     get:
+      operationId: listRoutineAlerts
       tags: [Routines, Alerts]
       summary: Lista degli alert associati alla routine
       responses:
@@ -132,6 +133,7 @@ paths:
         '404':
           description: Routine non trovata
     post:
+      operationId: addAlertToRoutine
       tags: [Routines, Alerts]
       summary: Aggiunge un nuovo alert alla routine
       requestBody:
@@ -152,6 +154,7 @@ paths:
 
   /alerts:
     get:
+      operationId: listAlerts
       tags: [Alerts]
       summary: Lista alert
       responses:
@@ -164,6 +167,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Alert'
     post:
+      operationId: createAlert
       tags: [Alerts]
       summary: Crea alert
       requestBody:
@@ -187,6 +191,7 @@ paths:
         required: true
         schema: { type: integer, format: int64 }
     get:
+      operationId: getAlert
       tags: [Alerts]
       summary: Dettaglio alert
       responses:
@@ -199,6 +204,7 @@ paths:
         '404':
           description: Non trovato
     put:
+      operationId: replaceAlert
       tags: [Alerts]
       summary: Sostituisce un alert (PUT)
       requestBody:
@@ -217,6 +223,7 @@ paths:
         '404':
           description: Non trovato
     patch:
+      operationId: updateAlert
       tags: [Alerts]
       summary: Aggiorna parzialmente un alert (PATCH)
       requestBody:
@@ -235,6 +242,7 @@ paths:
         '404':
           description: Non trovato
     delete:
+      operationId: deleteAlert
       tags: [Alerts]
       summary: Elimina alert
       responses:
@@ -250,8 +258,9 @@ paths:
         required: true
         schema: { type: integer, format: int64 }
     get:
+      operationId: listAlertChildren
       tags: [Alerts]
-      summary: Restituisce gli ID degli alert figli
+      summary: Restituisce gli alert figli (nessun id in output)
       responses:
         '200':
           description: OK
@@ -260,118 +269,38 @@ paths:
               schema:
                 type: array
                 items:
-                  type: integer
-                  format: int64
-        '404':
-          description: Non trovato
-
-  /condizioni-meteo:
-    get:
-      tags: [Condizioni Meteo]
-      summary: Lista condizioni meteo
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CondizioniMeteo'
-    post:
-      tags: [Condizioni Meteo]
-      summary: Crea condizione meteo
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CondizioniMeteo'
-      responses:
-        '201':
-          description: Creato
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CondizioniMeteo'
-
-  /condizioni-meteo/{codice}:
-    parameters:
-      - in: path
-        name: codice
-        required: true
-        schema: { type: integer, format: int64 }
-    get:
-      tags: [Condizioni Meteo]
-      summary: Dettaglio condizione meteo
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CondizioniMeteo'
-        '404':
-          description: Non trovato
-    put:
-      tags: [Condizioni Meteo]
-      summary: Sostituisce condizione meteo (PUT)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CondizioniMeteo'
-      responses:
-        '200':
-          description: Aggiornato
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CondizioniMeteo'
-        '404':
-          description: Non trovato
-    delete:
-      tags: [Condizioni Meteo]
-      summary: Elimina condizione meteo
-      responses:
-        '204':
-          description: Eliminato
+                  $ref: '#/components/schemas/Alert'
         '404':
           description: Non trovato
 
 components:
   schemas:
+    # ===== Routine (OUTPUT senza id) =====
     Routine:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          example: 123
         nomeRoutine:
           type: string
           example: Routine Mattutina
-        alertIds:
+        alerts:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [10, 11]
-      required: [id, nomeRoutine]
+            $ref: '#/components/schemas/Alert'
+      required: [nomeRoutine]
 
+    # ===== Routine CREATE/UPDATE/PATCH (senza id) =====
     RoutineCreate:
       type: object
       properties:
         nomeRoutine:
           type: string
           example: Routine Mattutina
-        alertIds:
+        alerts:
           type: array
           items:
-            type: integer
-            format: int64
+            $ref: '#/components/schemas/Alert'
       required: [nomeRoutine]
+      description: Payload di creazione routine con alert annidati (senza id).
 
     RoutineUpdate:
       allOf:
@@ -382,93 +311,73 @@ components:
       properties:
         nomeRoutine:
           type: string
-        alertIds:
+        alerts:
           type: array
           items:
-            type: integer
-            format: int64
+            $ref: '#/components/schemas/Alert'
 
+    # ===== Alert (OUTPUT & INPUT senza id) =====
     Alert:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          example: 987
-        titolo:
+        oraInizio:
           type: string
-          example: Allerta Pioggia
-        descrizione:
+          description: Ora di inizio (HH:mm).
+          pattern: '^([01]\\d|2[0-3]):[0-5]\\d$'
+          example: "14:00"
+        oraFine:
           type: string
-          example: Avvisami quando piove entro 5km.
-        attivo:
-          type: boolean
-          example: true
-        childrenIds:
+          description: Ora di fine (HH:mm).
+          pattern: '^([01]\\d|2[0-3]):[0-5]\\d$'
+          example: "18:00"
+        codici:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [1001, 1002]
-        condizioneMeteoCodice:
-          type: integer
-          format: int64
-          description: FK verso CondizioniMeteo.codice
-          example: 1
-      required: [id, titolo, attivo]
+            $ref: '#/components/schemas/Codice'
+        testoNotifica:
+          type: string
+          maxLength: 100
+          example: "testo recuperato da risposta API"
+        citta:
+          type: string
+          maxLength: 100
+          example: "Silvi"
+      required: [oraInizio, oraFine, codici, testoNotifica, citta]
 
-    AlertCreate:
+    Codice:
       type: object
       properties:
-        titolo:
-          type: string
-          example: Allerta Pioggia
         descrizione:
-          type: string
-        attivo:
-          type: boolean
-          default: true
-        childrenIds:
-          type: array
-          items:
-            type: integer
-            format: int64
-        condizioneMeteoCodice:
           type: integer
-          format: int64
-      required: [titolo]
+          description: Identificativo/descrizione del codice.
+          example: 1
+      required: [descrizione]
+
+    # ===== Per endpoint /alerts (input shape = output shape, senza id) =====
+    AlertCreate:
+      allOf:
+        - $ref: '#/components/schemas/Alert'
 
     AlertUpdate:
       allOf:
-        - $ref: '#/components/schemas/AlertCreate'
+        - $ref: '#/components/schemas/Alert'
 
     AlertPatch:
       type: object
       properties:
-        titolo:
+        oraInizio:
           type: string
-        descrizione:
+          pattern: '^([01]\\d|2[0-3]):[0-5]\\d$'
+        oraFine:
           type: string
-        attivo:
-          type: boolean
-        childrenIds:
+          pattern: '^([01]\\d|2[0-3]):[0-5]\\d$'
+        codici:
           type: array
           items:
-            type: integer
-            format: int64
-        condizioneMeteoCodice:
-          type: integer
-          format: int64
-
-    CondizioniMeteo:
-      type: object
-      properties:
-        codice:
-          type: integer
-          format: int64
-          example: 1
-        tipo:
+            $ref: '#/components/schemas/Codice'
+        testoNotifica:
           type: string
-          enum: [SOLEGGIATO, PARZIALMENTE_NUVOLOSO, NUVOLOSO]
-          example: SOLEGGIATO
-      required: [codice, tipo]
+          maxLength: 100
+        citta:
+          type: string
+          maxLength: 100
