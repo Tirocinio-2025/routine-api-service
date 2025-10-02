@@ -30,7 +30,7 @@
         <java.version>25</java.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <openapi-generator.version>7.4.0</openapi-generator.version>
-        <yaml.file>${project.basedir}/src/main/resources/userapi.yaml</yaml.file>
+        <yaml.file>${project.basedir}/src/main/resources/api.yaml</yaml.file>
         <generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
         <generated-sources-java-path>main/java</generated-sources-java-path>
     </properties>
