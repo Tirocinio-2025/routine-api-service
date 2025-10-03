@@ -1,23 +1,22 @@
 package tech.aesys.finale.routine.service;
 
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import tech.aesys.finale.routine.client.RoutineFeignClient;
+import tech.aesys.finale.routine.dto.request.RoutineDtoRequest;
+import tech.aesys.finale.routine.dto.response.RoutineDtoResponse;
+import tech.aesys.finale.routine.mapper.RoutineMapper;
 import tech.aesys.finale.routine.model.Routine;
-
-import java.util.List;
+import tech.aesys.finale.routine.repository.RoutineRepository;
 
 @Service
-@RequiredArgsConstructor
-public class RoutineServiceImpl implements RoutineService {
+public class RoutineServiceImpl {
 
-    //private final RoutineFeignClient routineFeignClient;
+    private final RoutineRepository routineRepository;
+    private final RoutineMapper mapper;
 
 
-    @Override
-    public ResponseEntity<List<Routine>> getRoutines(Long id) {
-        return null;
+    public RoutineServiceImpl(RoutineRepository routineRepository, RoutineMapper mapper) {
+        this.routineRepository = routineRepository;
+        this.mapper = mapper;
     }
 }

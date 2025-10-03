@@ -7,97 +7,32 @@ servers:
     description: Local server
 
 paths:
-  /routine/{id}:
-    get:
-      summary: Recupera tutte le routine di un utente
-      tags: [Routine]
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-          description: ID utente
-      responses:
-        "200":
-          description: Lista di routine
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Routine"
-
-    delete:
-      summary: Elimina una routine
-      tags: [Routine]
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          description: Eliminazione avvenuta con successo
-
-    patch:
-      summary: Modifica una routine
-      tags: [Routine]
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Routine"
-      responses:
-        "200":
-          description: Routine aggiornata
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Routine"
-    put:
-      summary: Sostituisci una routine
-      tags: [Routine]
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Routine"
-      responses:
-        "200":
-          description: Routine sostituita
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Routine"
 
   /routine:
+    get:
+      summary: Recupera tutte le routine
+      description: restituisce tutti gli alert del database
+      operationId: getAllRoutine
+      tags: [Routine]
+      responses:
+        "200":
+          description: Singola routine
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoutineOutput"
     post:
       summary: Crea una nuova routine
       tags: [Routine]
+      operationId: addRoutine
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Routine"
+              $ref: "#/components/schemas/RoutineInput"
             example:
-              nomeRoutine: "vskovdk"
+              nomeRoutine: "nome routine"
               alerts:
                 - oraInizio: "14:00"
                   oraFine: "18:00"
@@ -109,19 +44,99 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Routine"
-
-  /alerts/{id}:
+                $ref: "#/components/schemas/RoutineOutput"
+  /routine/{id}:
     get:
-      summary: Recupera gli alert di una routine
-      tags: [Alerts]
+      summary: Recupera tutte le routine
+      description: L'id è riferito alla routine
+      tags: [Routine]
+      operationId: getRoutineById
       parameters:
         - name: id
           in: path
           required: true
           schema:
-            type: string
-          description: ID della routine
+            type: integer
+            format: int64
+          description: ID utente
+      responses:
+        "200":
+          description: Singola routine
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoutineOutput"
+    delete:
+      summary: Elimina una routine
+      tags: [Routine]
+      operationId: deleteRoutine
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: Eliminazione avvenuta con successo
+    patch:
+      summary: Sostituisce una routine
+      description: dato l'id aggiorna la routine corrispondente col body all'occorrenza
+      tags: [Routine]
+      operationId: replaceRoutine
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoutineInput"
+      responses:
+        "200":
+          description: Routine aggiornata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoutineOutput"
+    put:
+      summary: Sostituisci una routine
+      description: dato l'id della ruotine nel aggiorna il body reinserendolo
+      tags: [Routine]
+      operationId: updateRoutine
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoutineInput"
+      responses:
+        "200":
+          description: Routine sostituita
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoutineOutput"
+
+  /alerts:
+    get:
+      summary: Recupera tutti gli alert
+      description: restituisce tutti gli alert del database
+      operationId: findAllAlerts
+      tags: [Alerts]
       responses:
         "200":
           description: Lista di alert
@@ -130,77 +145,17 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Alert"
-
-    delete:
-      summary: Elimina un alert
-      tags: [Alerts]
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          description: Eliminazione avvenuta con successo
-
-    patch:
-      summary: Modifica un alert
-      tags: [Alerts]
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Alert"
-      responses:
-        "200":
-          description: Alert aggiornato
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Alert"
-
-    put:
-      summary: Sostituisce un alert
-      tags: [Alerts]
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Alert"
-      responses:
-        "200":
-          description: Alert sostituito
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Alert"
-
-  /alerts:
+                  $ref: "#/components/schemas/AlertOutput"
     post:
       summary: Crea un alert
+      operationId: addAlert
       tags: [Alerts]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Alert"
+              $ref: "#/components/schemas/AlertInput"
             example:
               oraInizio: "14:00"
               oraFine: "18:00"
@@ -212,11 +167,103 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Alert"
+                $ref: "#/components/schemas/AlertOutput"
+
+
+  /alerts/{id}:
+    get:
+      summary: Recupera l'alert con id
+      description: restituisce l'alert che ha quel id nel database
+      operationId: findAlertById
+      tags: [Alerts]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID della routine
+      responses:
+        "200":
+          description: Lista di alert
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AlertOutput"
+
+    delete:
+      summary: Elimina un alert
+      operationId: deleteAlert
+      tags: [Alerts]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: Eliminazione avvenuta con successo
+
+    patch:
+      summary: Modifica un alert dato l'id
+      description: dato un id aggiorna l'alert corrispondente con il body all'occorrenza
+      tags: [Alerts]
+      operationId: replaceAlert
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlertInput"
+      responses:
+        "200":
+          description: Alert aggiornato
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlertOutput"
+
+    put:
+      summary: Sostituisce un alert
+      description: dato l'id dell'alert nel aggiorna il body reinserendolo
+      tags: [Alerts]
+      operationId: updateAlert
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlertInput"
+      responses:
+        "200":
+          description: Alert sostituito
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlertOutput"
 
 components:
   schemas:
-    Routine:
+    RoutineInput:
       type: object
       properties:
         nomeRoutine:
@@ -224,9 +271,19 @@ components:
         alerts:
           type: array
           items:
-            $ref: "#/components/schemas/Alert"
+            $ref: "#/components/schemas/AlertInput"
 
-    Alert:
+    RoutineOutput:
+      type: object
+      properties:
+        nomeRoutine:
+          type: string
+        alerts:
+          type: array
+          items:
+            $ref: "#/components/schemas/AlertOutput"
+
+    AlertInput:
       type: object
       properties:
         oraInizio:
@@ -244,7 +301,26 @@ components:
         codici:
           type: array
           items:
-            type: object
-            properties:
-              descrizione:
-                type: string
+            type: integer
+            format: int64
+    AlertOutput:
+      type: object
+      properties:
+        oraInizio:
+          type: string
+          example: "14:00"
+        oraFine:
+          type: string
+          example: "18:00"
+        citta:
+          type: string
+          example: "Silvi"
+        tipoMessaggio:
+          type: string
+          example: "Sveglia alle 6"
+        codici:
+          type: array
+          items:
+            type: integer
+            format: int64
+

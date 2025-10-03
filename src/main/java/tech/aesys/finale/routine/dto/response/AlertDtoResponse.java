@@ -1,43 +1,22 @@
-package tech.aesys.finale.routine.model;
+package tech.aesys.finale.routine.dto.response;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Entity
-@Table(name = "alert")
-public  class Alert implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor
+public class AlertDtoResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "alert_id", nullable = false)
     private Long id;
-
-    @Column(name = "ora_inizio", nullable = false)
     private LocalDateTime oraInizio;
-
-    @Column(name = "ora_fine", nullable = false)
     private LocalDateTime oraFine;
-
-    @ElementCollection
-    @CollectionTable(name = "alert_codici", joinColumns = @JoinColumn(name = "alert_id"))
-    @Column(name = "codice", nullable = false)
     private Set<String> codici;
-
-    @Column(name = "testo_notifica", nullable = false, length = 100)
     private String testoNotifica;
-
-    @Column(name = "citta", nullable = false, length = 100)
     private String citta;
-
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "routine_id")
-    private Routine routine;
-
 
     public Long getId() {
         return id;
@@ -85,13 +64,5 @@ public  class Alert implements Serializable {
 
     public void setCitta(String citta) {
         this.citta = citta;
-    }
-
-    public Routine getRoutine() {
-        return routine;
-    }
-
-    public void setRoutine(Routine routine) {
-        this.routine = routine;
     }
 }

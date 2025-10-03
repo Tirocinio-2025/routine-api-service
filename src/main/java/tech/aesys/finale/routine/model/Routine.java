@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "routine")
-public @Data class Routine {
+public class Routine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +17,31 @@ public @Data class Routine {
     @Column(name = "nome_routine", nullable = false)
     private String nomeRoutine;
 
-    @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "routine", fetch = FetchType.LAZY)
     private List<Alert> alerts;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNomeRoutine() {
+        return nomeRoutine;
+    }
+
+    public void setNomeRoutine(String nomeRoutine) {
+        this.nomeRoutine = nomeRoutine;
+    }
+
+    public List<Alert> getAlerts() {
+        return alerts;
+    }
+
+    public void setAlerts(List<Alert> alerts) {
+        this.alerts = alerts;
+    }
 }
