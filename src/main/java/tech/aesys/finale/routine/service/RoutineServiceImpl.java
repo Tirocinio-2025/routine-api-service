@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoutineServiceImpl implements RoutineService {
 
-    private final RoutineFeignClient routineFeignClient;
+    //private final RoutineFeignClient routineFeignClient;
 
 
     @Override

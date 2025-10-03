@@ -63,6 +63,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Routine"
+    put:
+      summary: Sostituisci una routine
+      tags: [Routine]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Routine"
+      responses:
+        "200":
+          description: Routine sostituita
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Routine"
 
   /routine:
     post:
@@ -146,6 +168,29 @@ paths:
               schema:
                 $ref: "#/components/schemas/Alert"
 
+    put:
+      summary: Sostituisce un alert
+      tags: [Alerts]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Alert"
+      responses:
+        "200":
+          description: Alert sostituito
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Alert"
+
   /alerts:
     post:
       summary: Crea un alert
@@ -190,6 +235,12 @@ components:
         oraFine:
           type: string
           example: "18:00"
+        citta:
+          type: string
+          example: "Silvi"
+        tipoMessaggio:
+          type: string
+          example: "Sveglia alle 6"
         codici:
           type: array
           items:
