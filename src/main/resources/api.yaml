@@ -1,181 +1,80 @@
 openapi: 3.0.3
 info:
-  title: Routine & Alerts API
-  version: 1.0.0
+  title: Routines & Alerts API
+  version: 1.0.1
+  description: >
+    API RESTful per la gestione di Routine e Alert.
+    - Una **Routine** è l'entità principale.
+    - Una **Routine** contiene una collezione di **Alert**.
+    - Un **Alert** può essere riutilizzato in più Routine.
+    - Una Routine senza Alert non è significativa.
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8080/api
     description: Local server
 
 paths:
 
-  /routine:
+  /routines:
     get:
-      summary: Recupera tutte le routine
-      description: restituisce tutti gli alert del database
-      operationId: getAllRoutine
+      summary: recupera tutte le Routine
+      description: restituisce tutte le routine registrate
+      operationId: getAllRoutines
       tags: [Routine]
       responses:
         "200":
-          description: Singola routine
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RoutineOutput"
-    post:
-      summary: Crea una nuova routine
-      tags: [Routine]
-      operationId: addRoutine
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RoutineInput"
-            example:
-              nomeRoutine: "nome routine"
-              alerts:
-                - oraInizio: "14:00"
-                  oraFine: "18:00"
-                  codici:
-                    - descrizione: 1
-      responses:
-        "201":
-          description: Routine creata
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RoutineOutput"
-  /routine/{id}:
-    get:
-      summary: Recupera tutte le routine
-      description: L'id è riferito alla routine
-      tags: [Routine]
-      operationId: getRoutineById
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          description: ID utente
-      responses:
-        "200":
-          description: Singola routine
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RoutineOutput"
-    delete:
-      summary: Elimina una routine
-      tags: [Routine]
-      operationId: deleteRoutine
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "204":
-          description: Eliminazione avvenuta con successo
-    patch:
-      summary: Sostituisce una routine
-      description: dato l'id aggiorna la routine corrispondente col body all'occorrenza
-      tags: [Routine]
-      operationId: replaceRoutine
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RoutineInput"
-      responses:
-        "200":
-          description: Routine aggiornata
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RoutineOutput"
-    put:
-      summary: Sostituisci una routine
-      description: dato l'id della ruotine nel aggiorna il body reinserendolo
-      tags: [Routine]
-      operationId: updateRoutine
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RoutineInput"
-      responses:
-        "200":
-          description: Routine sostituita
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RoutineOutput"
-
-  /alerts:
-    get:
-      summary: Recupera tutti gli alert
-      description: restituisce tutti gli alert del database
-      operationId: findAllAlerts
-      tags: [Alerts]
-      responses:
-        "200":
-          description: Lista di alert
+          description: lista di tutte le routine
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/AlertOutput"
+                  $ref: "#/components/schemas/RoutineOutput"
+        "500":
+          description: errore interno del server
     post:
-      summary: Crea un alert
-      operationId: addAlert
-      tags: [Alerts]
+      summary: crea una Routine
+      description: crea una nuova Routine contenente il body passato
+      tags: [Routine]
+      operationId: createRoutine
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AlertInput"
+              $ref: "#/components/schemas/RoutineInput"
             example:
-              oraInizio: "14:00"
-              oraFine: "18:00"
-              codici:
-                - descrizione: 1
+              nomeRoutine: "mattina-lavoro"
+              alerts:
+                - oraInizio: "06:30"
+                  oraFine: "06:45"
+                  citta: "Silvi"
+                  tipoMessaggio: "Sveglia mattutina"
+                  codici:
+                    - 1001
+                - oraInizio: "07:00"
+                  oraFine: "07:05"
+                  citta: "Silvi"
+                  tipoMessaggio: "Promemoria colazione"
+                  codici:
+                    - 1002
       responses:
         "201":
-          description: Alert creato
+          description: routine creata con successo
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AlertOutput"
+                $ref: "#/components/schemas/RoutineOutput"
+        "400":
+          description: invalid input
+        "500":
+          description: errore interno del server
 
-
-  /alerts/{id}:
+  /routines/{id}:
     get:
-      summary: Recupera l'alert con id
-      description: restituisce l'alert che ha quel id nel database
-      operationId: findAlertById
-      tags: [Alerts]
+      summary: recupera una Routine
+      description: recupera una Routine univoca tramite il suo id specificato
+      tags: [Routine]
+      operationId: getRoutineById
       parameters:
         - name: id
           in: path
@@ -186,16 +85,197 @@ paths:
           description: ID della routine
       responses:
         "200":
-          description: Lista di alert
+          description: singola routine
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoutineOutput"
+        "404":
+          description: routine not found
+        "500":
+          description: errore interno del server
+    delete:
+      summary: elimina una Routine
+      description: elimina la Routine avente l'id specificato
+      tags: [Routine]
+      operationId: deleteRoutine
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID della routine
+      responses:
+        "204":
+          description: eliminazione avvenuta con successo
+        "404":
+          description: routine not found
+        "500":
+          description: errore interno del server
+    patch:
+      summary: patch Routine
+      description: aggiorna parzialmente la Routine avente id passato col body della request
+      tags: [Routine]
+      operationId: patchRoutine
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID della routine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoutineInput"
+            example:
+              nomeRoutine: "mattina-lavoro-aggiornata"
+              alerts:
+                - oraInizio: "06:35"
+                  oraFine: "06:50"
+                  citta: "Silvi"
+                  tipoMessaggio: "Sveglia aggiornata"
+                  codici:
+                    - 1003
+      responses:
+        "200":
+          description: routine aggiornata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoutineOutput"
+        "400":
+          description: invalid input
+        "404":
+          description: routine not found
+        "500":
+          description: errore interno del server
+    put:
+      summary: replace Routine
+      description: sostituisce completamente la Routine avente id passato, se non esiste la crea
+      tags: [Routine]
+      operationId: updateRoutine
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID della routine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoutineInput"
+            example:
+              nomeRoutine: "mattina-lavoro-completa"
+              alerts:
+                - oraInizio: "06:30"
+                  oraFine: "06:45"
+                  citta: "Silvi"
+                  tipoMessaggio: "Sveglia mattutina"
+                  codici:
+                    - 1001
+      responses:
+        "200":
+          description: routine sostituita
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoutineOutput"
+        "201":
+          description: routine creata con successo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoutineOutput"
+        "400":
+          description: invalid input
+        "500":
+          description: errore interno del server
+
+  /alerts:
+    get:
+      summary: recupera tutti gli Alert
+      description: restituisce tutti gli Alert registrati
+      operationId: getAllAlerts
+      tags: [Alerts]
+      responses:
+        "200":
+          description: lista di alert
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/AlertOutput"
+        "500":
+          description: errore interno del server
+    post:
+      summary: crea un Alert
+      description: crea un nuovo Alert contenente il body passato
+      operationId: createAlert
+      tags: [Alerts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlertInput"
+            example:
+              oraInizio: "06:30"
+              oraFine: "06:45"
+              citta: "Silvi"
+              tipoMessaggio: "Sveglia mattutina"
+              codici:
+                - 1001
+      responses:
+        "201":
+          description: alert creato
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlertOutput"
+        "400":
+          description: invalid input
+        "500":
+          description: errore interno del server
 
+  /alerts/{id}:
+    get:
+      summary: recupera un Alert
+      description: restituisce un Alert univoco avente id passato
+      operationId: getAlertById
+      tags: [Alerts]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID dell'alert
+      responses:
+        "200":
+          description: alert trovato
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlertOutput"
+        "404":
+          description: alert not found
+        "500":
+          description: errore interno del server
     delete:
-      summary: Elimina un alert
+      summary: elimina un Alert
+      description: elimina l'Alert avente l'id specificato
       operationId: deleteAlert
       tags: [Alerts]
       parameters:
@@ -205,15 +285,19 @@ paths:
           schema:
             type: integer
             format: int64
+          description: ID dell'alert
       responses:
         "204":
-          description: Eliminazione avvenuta con successo
-
+          description: eliminazione avvenuta con successo
+        "404":
+          description: alert not found
+        "500":
+          description: errore interno del server
     patch:
-      summary: Modifica un alert dato l'id
-      description: dato un id aggiorna l'alert corrispondente con il body all'occorrenza
+      summary: patch Alert
+      description: aggiorna parzialmente l'Alert avente id passato col body della request
+      operationId: patchAlert
       tags: [Alerts]
-      operationId: replaceAlert
       parameters:
         - name: id
           in: path
@@ -221,25 +305,38 @@ paths:
           schema:
             type: integer
             format: int64
+          description: ID dell'alert
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/AlertInput"
+            example:
+              oraInizio: "06:35"
+              oraFine: "06:50"
+              citta: "Silvi"
+              tipoMessaggio: "Sveglia aggiornata"
+              codici:
+                - 1003
       responses:
         "200":
-          description: Alert aggiornato
+          description: alert aggiornato
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AlertOutput"
-
+        "400":
+          description: invalid input
+        "404":
+          description: alert not found
+        "500":
+          description: errore interno del server
     put:
-      summary: Sostituisce un alert
-      description: dato l'id dell'alert nel aggiorna il body reinserendolo
-      tags: [Alerts]
+      summary: replace Alert
+      description: sostituisce completamente l'Alert avente id passato, se non esiste lo crea
       operationId: updateAlert
+      tags: [Alerts]
       parameters:
         - name: id
           in: path
@@ -247,19 +344,175 @@ paths:
           schema:
             type: integer
             format: int64
+          description: ID dell'alert
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/AlertInput"
+            example:
+              oraInizio: "06:30"
+              oraFine: "06:45"
+              citta: "Silvi"
+              tipoMessaggio: "Sveglia mattutina"
+              codici:
+                - 1001
       responses:
         "200":
-          description: Alert sostituito
+          description: alert sostituito
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AlertOutput"
+        "201":
+          description: alert creato con successo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlertOutput"
+        "400":
+          description: invalid input
+        "500":
+          description: errore interno del server
+
+  /routines/{id}/alerts:
+    get:
+      summary: recupera gli Alert di una Routine
+      description: recupera tutti gli Alert associati alla Routine avente id passato
+      operationId: getAlertsForRoutine
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID della routine
+      tags: [Routine]
+      responses:
+        "200":
+          description: lista di alert associati alla routine
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AlertOutput"
+        "404":
+          description: routine not found
+        "500":
+          description: errore interno del server
+    post:
+      summary: associa un Alert alla Routine
+      description: Associa un alert esistente avente id passato nel body ad una routine specificata tramite il parametro id
+      operationId: linkAlertToRoutine
+      tags: [Routine]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID della routine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alertId:
+                  type: integer
+                  format: int64
+                  description: ID dell'alert
+              required:
+                - alertId
+            example:
+              alertId: 123
+      responses:
+        "201":
+          description: alert associato con successo alla routine
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlertOutput"
+        "400":
+          description: invalid input
+        "404":
+          description: routine or alert not found
+        "500":
+          description: errore interno del server
+    put: #post in realtà alternativa alla precedente
+      summary: crea un Alert e lo associa alla Routine
+      description: crea una nuova risorsa Alert a partire dal body e la associa
+        alla Routine identificata da id
+      operationId: createAlertForRoutine
+      tags: [Routine]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID della routine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlertInput"
+            example:
+              oraInizio: "06:30"
+              oraFine: "06:45"
+              citta: "Silvi"
+              tipoMessaggio: "Sveglia mattutina"
+              codici:
+                - 1001
+      responses:
+        "201":
+          description: alert creato e associato con successo alla routine
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlertOutput"
+        "400":
+          description: invalid input
+        "404":
+          description: routine not found
+        "500":
+          description: errore interno del server
+
+  /routines/{id}/alerts/{alertId}:
+    delete:
+      summary: elimina un Alert da una Routine
+      description: elimina l'associazione tra una Routine e un Alert specificati dai parametri id e alertId
+      operationId: unlinkAlertFromRoutine
+      tags: [Routine]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID della routine
+        - name: alertId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID dell'alert
+      responses:
+        "204":
+          description: associazione rimossa
+        "404":
+          description: routine or alert not found
+        "500":
+          description: errore interno del server
 
 components:
   schemas:
@@ -272,6 +525,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/AlertInput"
+      required:
+        - nomeRoutine
 
     RoutineOutput:
       type: object
@@ -288,39 +543,45 @@ components:
       properties:
         oraInizio:
           type: string
-          example: "14:00"
+          example: "06:30"
         oraFine:
           type: string
-          example: "18:00"
+          example: "06:45"
         citta:
           type: string
           example: "Silvi"
         tipoMessaggio:
           type: string
-          example: "Sveglia alle 6"
+          example: "Sveglia mattutina"
         codici:
           type: array
           items:
             type: integer
             format: int64
+      required:
+        - oraInizio
+        - oraFine
+        - citta
+        - tipoMessaggio
+        - codici
+
     AlertOutput:
       type: object
       properties:
         oraInizio:
           type: string
-          example: "14:00"
+          example: "06:30"
         oraFine:
           type: string
-          example: "18:00"
+          example: "06:45"
         citta:
           type: string
           example: "Silvi"
         tipoMessaggio:
           type: string
-          example: "Sveglia alle 6"
+          example: "Sveglia mattutina"
         codici:
           type: array
           items:
             type: integer
             format: int64
-
