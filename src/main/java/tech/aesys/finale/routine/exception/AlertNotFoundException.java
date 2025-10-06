@@ -1,7 +1,6 @@
 package tech.aesys.finale.routine.exception;
 
 import lombok.Getter;
-
 @Getter
 public class AlertNotFoundException extends RuntimeException {
     private final String code;
@@ -13,5 +12,9 @@ public class AlertNotFoundException extends RuntimeException {
     public AlertNotFoundException(String message, String code) {
         super(message);
         this.code = code;
+    }
+
+    public String getCode() {
+        return this.code;
     }
 }

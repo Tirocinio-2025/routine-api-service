@@ -13,7 +13,7 @@ import java.net.URI;
 public class AlertExceptionController {
 
     @ExceptionHandler(AlertNotFoundException.class)
-    public ProblemDetail handleUserNotFound(AlertNotFoundException ex, HttpServletRequest request) {
+    public ProblemDetail handleAlertNotFound(AlertNotFoundException ex, HttpServletRequest request) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         pd.setTitle("Resource not found");
         String uri = request.getRequestURL().toString();
@@ -31,13 +31,13 @@ public class AlertExceptionController {
         return pd;
     }
 
-    @ExceptionHandler(UserRoleMismatchException.class)
-    public ProblemDetail handleUserRoleMismatch(UserRoleMismatchException ex, HttpServletRequest request) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        pd.setTitle("Invalid request");
-        String uri = request.getRequestURL().toString();
-        pd.setType(URI.create(uri));
-        pd.setProperty("code", ex.getCode());
-        return pd;
-    }
+//    @ExceptionHandler(UserRoleMismatchException.class)
+//    public ProblemDetail handleUserRoleMismatch(UserRoleMismatchException ex, HttpServletRequest request) {
+//        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+//        pd.setTitle("Invalid request");
+//        String uri = request.getRequestURL().toString();
+//        pd.setType(URI.create(uri));
+//        pd.setProperty("code", ex.getCode());
+//        return pd;
+//    }
 }

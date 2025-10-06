@@ -20,9 +20,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/")
-@RequiredArgsConstructor
 public class AlertController implements AlertsApi {
     private final AlertService alertService;
+
+    public  AlertController(AlertService alertService) {
+        this.alertService = alertService;
+    }
 
     /**
      * POST /alerts : crea un Alert

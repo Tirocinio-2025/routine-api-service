@@ -15,11 +15,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AlertServiceImpl implements AlertService {
     private final AlertRepository alertRepository;
     private final AlertMapper alertMapper;
 
+    public AlertServiceImpl(AlertRepository alertRepository, AlertMapper alertMapper) {
+        this.alertRepository = alertRepository;
+        this.alertMapper = alertMapper;
+    }
 
     @Override
     public AlertOutput createAlert(AlertInput alertInput) {
