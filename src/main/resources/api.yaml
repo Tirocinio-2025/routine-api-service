@@ -389,7 +389,7 @@ paths:
             type: integer
             format: int64
           description: ID della routine
-      tags: [Routine]
+      tags: [associazione Alert Routine]
       responses:
         "200":
           description: lista di alert associati alla routine
@@ -407,7 +407,7 @@ paths:
       summary: associa un Alert alla Routine
       description: Associa un alert esistente avente id passato nel body ad una routine specificata tramite il parametro id
       operationId: linkAlertToRoutine
-      tags: [Routine]
+      tags: [associazione Alert Routine]
       parameters:
         - name: id
           in: path
@@ -444,12 +444,12 @@ paths:
           description: routine or alert not found
         "500":
           description: errore interno del server
-    put: #post in realtà alternativa alla precedente
+    put:
       summary: crea un Alert e lo associa alla Routine
       description: crea una nuova risorsa Alert a partire dal body e la associa
         alla Routine identificata da id
       operationId: createAlertForRoutine
-      tags: [Routine]
+      tags: [associazione Alert Routine]
       parameters:
         - name: id
           in: path
@@ -490,7 +490,7 @@ paths:
       summary: elimina un Alert da una Routine
       description: elimina l'associazione tra una Routine e un Alert specificati dai parametri id e alertId
       operationId: unlinkAlertFromRoutine
-      tags: [Routine]
+      tags: [associazione Alert Routine]
       parameters:
         - name: id
           in: path
@@ -531,6 +531,9 @@ components:
     RoutineOutput:
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
         nomeRoutine:
           type: string
         alerts:
@@ -568,6 +571,9 @@ components:
     AlertOutput:
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
         oraInizio:
           type: string
           example: "06:30"
