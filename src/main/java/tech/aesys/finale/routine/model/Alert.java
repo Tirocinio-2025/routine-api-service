@@ -22,10 +22,8 @@ public  class Alert implements Serializable {
     @Column(name = "ora_fine", nullable = false)
     private LocalDateTime oraFine;
 
-    @ElementCollection
-    @CollectionTable(name = "alert_codici", joinColumns = @JoinColumn(name = "alert_id"))
-    @Column(name = "codice", nullable = false)
-    private Set<String> codici;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "alert")
+    private Set<AlertWeatherCode> codici;
 
     @Column(name = "testo_notifica", nullable = false, length = 100)
     private String testoNotifica;
@@ -63,11 +61,11 @@ public  class Alert implements Serializable {
         this.oraFine = oraFine;
     }
 
-    public Set<String> getCodici() {
+    public Set<AlertWeatherCode> getCodici() {
         return codici;
     }
 
-    public void setCodici(Set<String> codici) {
+    public void setCodici(Set<AlertWeatherCode> codici) {
         this.codici = codici;
     }
 
