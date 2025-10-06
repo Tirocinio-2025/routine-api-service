@@ -25,7 +25,7 @@ public  class Alert implements Serializable {
     @ElementCollection
     @CollectionTable(name = "alert_codici", joinColumns = @JoinColumn(name = "alert_id"))
     @Column(name = "codice", nullable = false)
-    private Set<String> codici;
+    private Set<Long> codici;
 
     @Column(name = "testo_notifica", nullable = false, length = 100)
     private String testoNotifica;
@@ -63,11 +63,11 @@ public  class Alert implements Serializable {
         this.oraFine = oraFine;
     }
 
-    public Set<String> getCodici() {
+    public Set<Long> getCodici() {
         return codici;
     }
 
-    public void setCodici(Set<String> codici) {
+    public void setCodici(Set<Long> codici) {
         this.codici = codici;
     }
 
