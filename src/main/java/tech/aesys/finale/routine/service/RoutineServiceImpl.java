@@ -16,7 +16,6 @@ import tech.aesys.finale.routine.swagger.model.AlertOutput;
 import tech.aesys.finale.routine.swagger.model.RoutineInput;
 import tech.aesys.finale.routine.swagger.model.RoutineOutput;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
