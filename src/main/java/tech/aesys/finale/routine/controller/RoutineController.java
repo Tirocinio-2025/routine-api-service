@@ -3,6 +3,7 @@ package tech.aesys.finale.routine.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.aesys.finale.routine.service.RoutineService;
 import tech.aesys.finale.routine.service.RoutineServiceImpl;
 import tech.aesys.finale.routine.swagger.api.RoutinesApi;
 import tech.aesys.finale.routine.swagger.model.*;
@@ -14,7 +15,7 @@ import java.util.List;
 public class RoutineController implements RoutinesApi {
 
 
-    private final RoutineServiceImpl routineService;
+    private final RoutineService routineService;
 
     public RoutineController(RoutineServiceImpl routineService) {
         this.routineService = routineService;

@@ -27,14 +27,11 @@ public interface AlertMapper {
     @Mapping(source = "tipoMessaggio", target = "testoNotifica")
     Alert toEntity (AlertInput alertInput);
 
-    @Mapping(source = "codes", target = "codici")
-    Alert toEntity2 (AlertInput alertInput,Set<AlertWeatherCode> codes);
-
     @Mapping(source = "codici", target = "codici", qualifiedByName = "mapCodici")
     AlertOutput toOutput(Alert alert);
 
     @Named("mapCodici")
-    public static List<Long> mapCodici(Set<AlertWeatherCode> codici) {
+    static List<Long> mapCodici(Set<AlertWeatherCode> codici) {
         List<Long> ids = new ArrayList<>();
         for (AlertWeatherCode codice : codici) {
             ids.add(codice.getId().getCode());
@@ -43,7 +40,7 @@ public interface AlertMapper {
     }
 
     @Named("mapCodiciEntity")
-    public static Set<AlertWeatherCode> mapCodiciEntity(List<Long> codici) {
+    static Set<AlertWeatherCode> mapCodiciEntity(List<Long> codici) {
         return null;
     }
 

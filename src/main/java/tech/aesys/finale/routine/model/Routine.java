@@ -10,7 +10,6 @@ import java.util.List;
 public class Routine {
 
     public Routine() {}
-    public Routine(Long idRoutine) {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

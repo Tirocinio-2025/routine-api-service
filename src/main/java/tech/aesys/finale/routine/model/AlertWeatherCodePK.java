@@ -15,11 +15,6 @@ public class AlertWeatherCodePK {
     public AlertWeatherCodePK() {
     }
 
-    public AlertWeatherCodePK(Long id, Long code) {
-        this.alert_id = id;
-        this.code = code;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

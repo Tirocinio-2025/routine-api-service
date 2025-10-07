@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @Service
-public class RoutineServiceImpl {
+public class RoutineServiceImpl implements RoutineService {
 
     private final RoutineRepository routineRepository;
     private final AlertRepository alertRepository;
@@ -39,6 +39,7 @@ public class RoutineServiceImpl {
         this.alertWeatherCodeRepository = alertWeatherCodeRepository;
     }
 
+    @Override
     public RoutineOutput createRoutine(RoutineInput routineInput) {
         Routine routine = routineMapper.toEntity(routineInput);
         routine.setAlerts(new ArrayList<>());
@@ -74,18 +75,21 @@ public class RoutineServiceImpl {
 
     }
 
+    @Override
     public void deleteRoutine(Long id) {
         Routine routine = routineRepository.findById(id).orElseThrow(() -> new RoutineNonTrovataException("Routine con id " + id + " non trovata"));
         routineRepository.delete(routine);
 
     }
 
+    @Override
     public List<AlertOutput> getAlertsForRoutine(Long id) {
         Routine routine = routineRepository.findById(id).orElseThrow(() -> new RoutineNonTrovataException("Routine con id " + id + " non trovata"));
         List<Alert> alerts = alertRepository.getAlertByRoutineId(routine.getId());
         return alerts.stream().map(alertMapper::toOutput).toList();
     }
 
+    @Override
     public List<RoutineOutput> getAllRoutines() {
 
         List<Routine> routines = routineRepository.findAll();
@@ -93,11 +97,13 @@ public class RoutineServiceImpl {
 
     }
 
+    @Override
     public RoutineOutput getRoutineById(Long id) {
         Routine routine = routineRepository.findById(id).orElseThrow(() -> new RoutineNonTrovataException("Routine con id " + id + " non trovata"));
         return routineMapper.toOutput(routine);
     }
 
+    @Override
     public RoutineOutput patchRoutine(Long id, RoutineInput routineInput) {
 
         List<Alert> list = new ArrayList<>();
@@ -112,17 +118,4 @@ public class RoutineServiceImpl {
 
     }
 
-
-//    public ResponseEntity<AlertOutput> createAlertForRoutine(Long id, AlertInput alertInput) {
-//        Alert alert = alertMapper.toEntity(alertInput);
-//        alertRepository.save(alert);
-//        Optional<Routine> routineOptional = routineRepository.findById(id);
-//        if (routineOptional.isPresent()) {
-//            Long idRoutine = routineOptional.get().getId();
-//            alert.setRoutine(new Routine(idRoutine));
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return
-//    }
 }

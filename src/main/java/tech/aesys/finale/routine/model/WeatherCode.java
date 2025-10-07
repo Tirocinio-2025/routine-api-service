@@ -20,8 +20,12 @@ public class WeatherCode implements Serializable {
     @Column(name = "night")
     private String nightDesc;
 
-    @OneToMany( mappedBy = "weatherCode")
+    @Column(name = "icon")
+    private Integer icon;
+
+    @OneToMany(mappedBy = "weatherCode")
     private Set<AlertWeatherCode> codici;
+
 
     public Set<AlertWeatherCode> getCodici() {
         return codici;
@@ -54,5 +58,14 @@ public class WeatherCode implements Serializable {
     public void setNightDesc(String nightDesc) {
         this.nightDesc = nightDesc;
     }
+
+    public Integer getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Integer icon) {
+        this.icon = icon;
+    }
+
 }
 

@@ -23,11 +23,7 @@ public interface RoutineMapper {
     RoutineMapper INSTANCE = Mappers.getMapper(RoutineMapper.class);
 
 
-
-
     Routine toEntity(RoutineInput routineInput);
-    Routine toEntity2(RoutineInput routineInput, Set<AlertWeatherCode> codes);
-
 
     RoutineOutput toOutput(Routine routine);
 
