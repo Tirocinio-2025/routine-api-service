@@ -25,6 +25,14 @@ CREATE TABLE weather_codes (
                                icon INT NOT NULL             -- id icona associata
 );
 
+CREATE TABLE alert_weather_code(
+    alert_id BIGINT NOT NULL,
+    code BIGINT NOT NULL,
+    CONSTRAINT pk_alert_weather_code PRIMARY KEY (alert_id, code),
+    CONSTRAINT fk_alert FOREIGN KEY (alert_id) REFERENCES alert(alert_id) ON DELETE CASCADE,
+    CONSTRAINT fk_weather_code FOREIGN KEY (code) REFERENCES weather_codes(code) ON DELETE CASCADE
+);
+
 INSERT INTO routine (routine_id, nome_routine) VALUES (1, 'Bongiorn eh');
 INSERT INTO alert (alert_id, ora_inizio, ora_fine, testo_notifica, citta, routine_id) VALUES (1, '2024-07-01 07:00:00', '2024-07-01 08:00:00', 'Bongiorn eh.', 'Silvi', 1);
 INSERT INTO weather_codes (code, day, night, icon) VALUES

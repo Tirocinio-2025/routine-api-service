@@ -8,7 +8,7 @@ import java.util.Objects;
 public class AlertWeatherCodePK {
 
     @Column(name = "alert_id", nullable = false)
-    private Long alert_id;
+    private Long alertId;
     @Column(name = "code", nullable = false)
     private Long code;
 
@@ -19,12 +19,12 @@ public class AlertWeatherCodePK {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AlertWeatherCodePK that = (AlertWeatherCodePK) o;
-        return Objects.equals(alert_id, that.alert_id) && Objects.equals(code, that.code);
+        return Objects.equals(alertId, that.alertId) && Objects.equals(code, that.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(alert_id, code);
+        return Objects.hash(alertId, code);
     }
 
     public Long getCode() {
@@ -35,11 +35,11 @@ public class AlertWeatherCodePK {
         this.code = code;
     }
 
-    public Long getAlert_id() {
-        return alert_id;
+    public Long getAlertId() {
+        return alertId;
     }
 
-    public void setAlert_id(Long alert_id) {
-        this.alert_id = alert_id;
+    public void setAlertId(Long alertId) {
+        this.alertId = alertId;
     }
 }
