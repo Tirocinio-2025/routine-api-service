@@ -1,6 +1,10 @@
 package tech.aesys.finale.routine.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.aesys.finale.routine.service.RoutineService;
@@ -17,7 +21,7 @@ public class RoutineController implements RoutinesApi {
 
     private final RoutineService routineService;
 
-    public RoutineController(RoutineServiceImpl routineService) {
+    public RoutineController(RoutineService routineService) {
         this.routineService = routineService;
     }
 
@@ -53,17 +57,26 @@ public class RoutineController implements RoutinesApi {
         return ResponseEntity.ok().body(response);
     }
 
-    /**
-     * DELETE /routines/{id} : elimina una Routine
-     * elimina la Routine avente l&#39;id specificato
-     *
-     * @param id ID della routine (required)
-     * @return eliminazione avvenuta con successo (status code 204)
-     * or routine not found (status code 404)
-     * or errore interno del server (status code 500)
-     */
-    @Override
-    public ResponseEntity<Void> deleteRoutine(Long id) {
+
+    @Operation(
+            operationId = "deleteRoutine",
+            summary = "elimina una Routine",
+            description = "elimina la Routine avente l'id specificato",
+            tags = { "Routine" },
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "eliminazione avvenuta con successo"),
+                    @ApiResponse(responseCode = "404", description = "routine not found"),
+                    @ApiResponse(responseCode = "500", description = "errore interno del server")
+            }
+    )
+    @RequestMapping(
+            method = RequestMethod.DELETE,
+            value = "/routines/{id}"
+    )
+
+    public ResponseEntity<Void> deleteRoutine(
+            @Parameter(name = "id", description = "ID della routine", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
+    ){
         routineService.deleteRoutine(id);
         return ResponseEntity.noContent().build();
     }

@@ -1,6 +1,7 @@
 package tech.aesys.finale.routine.service;
 
 
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 import tech.aesys.finale.routine.exception.RoutineNonTrovataException;
 import tech.aesys.finale.routine.mapper.AlertMapper;
@@ -18,6 +19,7 @@ import tech.aesys.finale.routine.swagger.model.RoutineOutput;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoutineServiceImpl implements RoutineService {
@@ -41,39 +43,57 @@ public class RoutineServiceImpl implements RoutineService {
 
     @Override
     public RoutineOutput createRoutine(RoutineInput routineInput) {
-        Routine routine = routineMapper.toEntity(routineInput);
-        routine.setAlerts(new ArrayList<>());
+
+        Routine routine = this.createRoutineEntity(routineInput);
+
         routine = routineRepository.save(routine);
-
-        List<Alert> alertList = new ArrayList<>();
-
-        for (AlertInput alert : routineInput.getAlerts()) {
-
-            List<WeatherCode> weatherCodes = weatherCodeRepository.findAllByCodeIn(alert.getCodici());
-
-
-            Alert alertEntity = alertMapper.toEntity(alert);
-            alertEntity.setRoutine(routine);
-
-            alertEntity.setCodici(new HashSet<>());
-
-            alertRepository.save(alertEntity);
-
-            for (WeatherCode weatherCode : weatherCodes) {
-                AlertWeatherCode alertWeatherCode = new AlertWeatherCode();
-                alertWeatherCode.setWeatherCode(weatherCode);
-                alertWeatherCode.setAlert(alertEntity);
-                alertWeatherCode = alertWeatherCodeRepository.save(alertWeatherCode);
-                alertEntity.getCodici().add(alertWeatherCode);
-            }
-            alertList.add(alertEntity);
-        }
-        routine.setAlerts(alertList);
-        routine = routineRepository.save(routine);
-
         return routineMapper.toOutput(routine);
 
     }
+
+    private Routine createRoutineEntity(RoutineInput routineInput) {
+        Routine routine = routineMapper.toEntity(routineInput);
+
+        List<Alert> alerts = createAlerts(routine, routineInput.getAlerts());
+
+        routine.setAlerts(alerts);
+
+        return routine;
+
+    }
+
+    private List<Alert> createAlerts(Routine routine, @Valid List<@Valid AlertInput> alerts) {
+        var response = alerts.stream()
+                .map(alertMapper::toEntity)
+                .peek(alert -> alert.setRoutine(routine))
+                .collect(Collectors.toList());
+
+
+        for (int i = 0; i < alerts.size(); i++) {
+            joinAlertWeatherCodes(response.get(i), alerts.get(i).getCodici());
+        }
+
+        return response;
+    }
+
+    private void joinAlertWeatherCodes(Alert alert, List<Long> codici) {
+        List<WeatherCode> weatherCodes = weatherCodeRepository.findAllByCodeIn(codici);
+
+        alert.setCodici(new HashSet<>());
+
+        for (WeatherCode weatherCode : weatherCodes) {
+            AlertWeatherCode alertWeatherCode = new AlertWeatherCode();
+            alertWeatherCode.setWeatherCode(weatherCode);
+            alertWeatherCode.setAlert(alert);
+
+            AlertWeatherCodePK pk = new AlertWeatherCodePK();
+            pk.setCode(weatherCode.getCode());
+            pk.setAlertId(alert.getId());
+            alertWeatherCode.setId(pk);
+            alert.getCodici().add(alertWeatherCode);
+        }
+    }
+
 
     @Override
     public void deleteRoutine(Long id) {

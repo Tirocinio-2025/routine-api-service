@@ -1,12 +1,13 @@
 package tech.aesys.finale.routine.service;
 
 
+import org.springframework.stereotype.Service;
 import tech.aesys.finale.routine.swagger.model.AlertOutput;
 import tech.aesys.finale.routine.swagger.model.RoutineInput;
 import tech.aesys.finale.routine.swagger.model.RoutineOutput;
 
 import java.util.List;
-
+@Service
 public interface RoutineService {
 
     RoutineOutput createRoutine(RoutineInput routineInput);
