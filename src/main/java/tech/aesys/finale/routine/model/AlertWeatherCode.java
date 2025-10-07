@@ -14,6 +14,14 @@ public class AlertWeatherCode {
     @EmbeddedId
     private AlertWeatherCodePK id;
 
+    @ManyToOne
+    @MapsId("alertId")
+    private Alert alert;
+
+    @ManyToOne
+    @MapsId("code")
+    private WeatherCode weatherCode;
+
     public Alert getAlert() {
         return alert;
     }
@@ -37,15 +45,5 @@ public class AlertWeatherCode {
     public AlertWeatherCodePK getId() {
         return id;
     }
-
-    @ManyToOne
-    @MapsId("alert_id")
-    @JoinColumn(name = "alert_id")
-    private Alert alert;
-
-    @ManyToOne
-    @MapsId("code")
-    @JoinColumn(name = "code")
-    private WeatherCode weatherCode;
 
 }
