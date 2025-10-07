@@ -12,6 +12,7 @@ import tech.aesys.finale.routine.service.RoutineServiceImpl;
 import tech.aesys.finale.routine.swagger.api.RoutinesApi;
 import tech.aesys.finale.routine.swagger.model.*;
 
+
 import java.util.List;
 
 @RestController
@@ -135,10 +136,6 @@ public class RoutineController implements RoutinesApi {
      * or routine or alert not found (status code 404)
      * or errore interno del server (status code 500)
      */
-    @Override
-    public ResponseEntity<AlertOutput> linkAlertToRoutine(Long id, LinkAlertToRoutineRequest linkAlertToRoutineRequest) {
-        return null;
-    }
 
     /**
      * PATCH /routines/{id} : patch Routine

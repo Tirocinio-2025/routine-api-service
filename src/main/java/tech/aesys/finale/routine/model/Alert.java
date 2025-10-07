@@ -2,6 +2,8 @@ package tech.aesys.finale.routine.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -23,6 +25,7 @@ public  class Alert implements Serializable {
     private LocalDateTime oraFine;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "alert")
+    @Fetch(FetchMode.SUBSELECT)
     private Set<AlertWeatherCode> codici;
 
     @Column(name = "testo_notifica", nullable = false, length = 100)

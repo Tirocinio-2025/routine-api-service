@@ -3,46 +3,51 @@ package tech.aesys.finale.routine.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
-import tech.aesys.finale.routine.dto.request.AlertDtoRequest;
-import tech.aesys.finale.routine.dto.response.AlertDtoResponse;
 import tech.aesys.finale.routine.model.Alert;
 import tech.aesys.finale.routine.model.AlertWeatherCode;
-import tech.aesys.finale.routine.model.WeatherCode;
+import tech.aesys.finale.routine.model.AlertWeatherCodePK;
 import tech.aesys.finale.routine.swagger.model.AlertInput;
 import tech.aesys.finale.routine.swagger.model.AlertOutput;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface AlertMapper {
 
-    AlertMapper INSTANCE = Mappers.getMapper(AlertMapper.class);
-
-    @Mapping(source = "codici", target = "codici", qualifiedByName = "mapCodiciEntity")
+    @Mapping(source = "codici", target = "codici", qualifiedByName = "mapLongToAlertWeatherCode")
     @Mapping(source = "tipoMessaggio", target = "testoNotifica")
-    Alert toEntity (AlertInput alertInput);
+    Alert toEntity(AlertInput alertInput);
 
-    @Mapping(source = "codici", target = "codici", qualifiedByName = "mapCodici")
+    @Mapping(source = "codici", target = "codici", qualifiedByName = "mapAlertWeatherCodeToLong")
     @Mapping(target = "tipoMessaggio", source = "testoNotifica")
     AlertOutput toOutput(Alert alert);
 
-    @Named("mapCodici")
-    static List<Long> mapCodici(Set<AlertWeatherCode> codici) {
-        List<Long> ids = new ArrayList<>();
-        for (AlertWeatherCode codice : codici) {
-            ids.add(codice.getId().getCode());
-        }
-        return ids;
+    @Named("mapAlertWeatherCodeToLong")
+    default List<Long> mapAlertWeatherCodeToLong(Set<AlertWeatherCode> codici) {
+        if (codici == null) return new ArrayList<>();
+        return codici.stream()
+                .map(codice -> codice.getId().getCode())
+                .collect(Collectors.toList());
     }
 
-    @Named("mapCodiciEntity")
-    static Set<AlertWeatherCode> mapCodiciEntity(List<Long> codici) {
-        return null;
+    @Named("mapLongToAlertWeatherCode")
+    default Set<AlertWeatherCode> mapLongToAlertWeatherCode(List<Long> codici) {
+        if (codici == null) return new HashSet<>();
+        return codici.stream()
+                .map(code -> {
+                    AlertWeatherCodePK pk = new AlertWeatherCodePK();
+                    pk.setCode(code);
+                    pk.setAlertId(null); // Sarà impostato nel service
+                    AlertWeatherCode alertWeatherCode = new AlertWeatherCode();
+                    alertWeatherCode.setId(pk);
+                    return alertWeatherCode;
+                })
+                .collect(Collectors.toSet());
     }
 
     default LocalDateTime mapStringToLocalDateTime(String value) {
@@ -53,8 +58,3 @@ public interface AlertMapper {
         return value != null ? value.toString() : null;
     }
 }
-
-
-
-
-

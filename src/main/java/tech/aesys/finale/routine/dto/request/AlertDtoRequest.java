@@ -1,59 +1,21 @@
 package tech.aesys.finale.routine.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class AlertDtoRequest {
 
     private LocalDateTime oraInizio;
     private LocalDateTime oraFine;
-    private Set<String> codici;
+    private Set<Long> codici;
     private String testoNotifica;
     private String citta;
 
-    public String getCitta() {
-        return citta;
-    }
-
-    public void setCitta(String citta) {
-        this.citta = citta;
-    }
-
-    public String getTestoNotifica() {
-        return testoNotifica;
-    }
-
-    public void setTestoNotifica(String testoNotifica) {
-        this.testoNotifica = testoNotifica;
-    }
-
-    public Set<String> getCodici() {
-        return codici;
-    }
-
-    public void setCodici(Set<String> codici) {
-        this.codici = codici;
-    }
-
-    public LocalDateTime getOraFine() {
-        return oraFine;
-    }
-
-    public void setOraFine(LocalDateTime oraFine) {
-        this.oraFine = oraFine;
-    }
-
-    public LocalDateTime getOraInizio() {
-        return oraInizio;
-    }
-
-    public void setOraInizio(LocalDateTime oraInizio) {
-        this.oraInizio = oraInizio;
-    }
 }
+
