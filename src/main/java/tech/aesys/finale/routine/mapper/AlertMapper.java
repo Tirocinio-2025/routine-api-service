@@ -28,6 +28,7 @@ public interface AlertMapper {
     Alert toEntity (AlertInput alertInput);
 
     @Mapping(source = "codici", target = "codici", qualifiedByName = "mapCodici")
+    @Mapping(target = "tipoMessaggio", source = "testoNotifica")
     AlertOutput toOutput(Alert alert);
 
     @Named("mapCodici")
