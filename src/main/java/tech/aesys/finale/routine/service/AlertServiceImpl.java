@@ -29,23 +29,16 @@ public class AlertServiceImpl implements AlertService {
 
     @Override
     public AlertOutput createAlert(AlertInput alertInput) {
-        Alert alert = new Alert();
-        alert.setCitta(alertInput.getCitta());
-        alert.setOraInizio(alertMapper.mapStringToLocalDateTime(alertInput.getOraInizio()));
-        alert.setOraFine(alertMapper.mapStringToLocalDateTime(alertInput.getOraFine()));
-        alert.setTestoNotifica(alertInput.getTipoMessaggio());
-
-        Alert savedAlert = alertRepository.save(alert);
+        var alert = alertMapper.toEntity(alertInput);
 
         if (alertInput.getCodici() != null && !alertInput.getCodici().isEmpty()) {
             Set<AlertWeatherCode> alertWeatherCodes = createAlertWeatherCodes(
-                savedAlert, alertInput.getCodici());
-            savedAlert.setCodici(alertWeatherCodes);
-
-            savedAlert = alertRepository.save(savedAlert);
+                    alert, alertInput.getCodici());
+            alert.setCodici(alertWeatherCodes);
         }
+        alertRepository.save(alert);
 
-        return alertMapper.toOutput(savedAlert);
+        return alertMapper.toOutput(alert);
     }
 
     private Set<AlertWeatherCode> createAlertWeatherCodes(Alert alert, List<Long> codiciInput) {

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.aesys.finale.routine.service.RoutineService;
@@ -17,6 +18,7 @@ import tech.aesys.finale.routine.swagger.model.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("api")
 public class RoutineController implements RoutinesApi {
@@ -251,9 +253,12 @@ public class RoutineController implements RoutinesApi {
      */
     @Override
     public ResponseEntity<AlertOutput> createAlertForRoutine(@PathVariable("id") Long id, @RequestBody AlertInput alertInput) {
+        var start = System.currentTimeMillis();
+        log.info("Chiamata a createAlertForRoutine con id: {} e alertInput: {}", id, alertInput);
 
         AlertOutput response = routineService.createAlertForRoutine(id, alertInput);
 
+        log.info("Chiamata a createAlertForRoutine con id: {} e response: {} spent {} ms", id, response, System.currentTimeMillis()-start);
         return ResponseEntity.ok().body(response);
     }
 }

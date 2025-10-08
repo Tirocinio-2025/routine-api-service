@@ -1,6 +1,7 @@
 package tech.aesys.finale.routine.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,6 +10,7 @@ import tech.aesys.finale.routine.exception.AlertNotFoundException;
 
 import java.net.URI;
 
+@Slf4j
 @ControllerAdvice
 public class AlertExceptionController {
 
@@ -19,6 +21,9 @@ public class AlertExceptionController {
         String uri = request.getRequestURL().toString();
         pd.setType(URI.create(uri));
         pd.setProperty("code", ex.getCode());
+
+        log.error(pd.toString(), ex);
+
         return pd;
     }
 
@@ -28,6 +33,9 @@ public class AlertExceptionController {
         pd.setTitle("Internal Server Error");
         String uri = request.getRequestURL().toString();
         pd.setType(URI.create(uri));
+
+        log.error(pd.toString(), ex);
+
         return pd;
     }
 
