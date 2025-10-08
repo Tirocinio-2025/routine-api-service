@@ -122,4 +122,26 @@ public class RoutineServiceImpl implements RoutineService {
         return routineMapper.toOutput(routine);
     }
 
+    @Override
+    public AlertOutput createAlertForRoutine(Long id, AlertInput alertInput) {
+        Routine routine = routineRepository.findById(id).orElseThrow(() -> new RoutineNonTrovataException("Routine con id " + id + " non trovata"));
+        Alert alert = alertMapper.toEntity(alertInput);
+        routine.getAlerts().add(alert);
+        alert.setRoutine(routine);
+
+        alert = alertRepository.save(alert);
+
+        joinAlertWeatherCodes(alert, alertInput.getCodici());
+
+        alert = alertRepository.save(alert);
+
+        return alertMapper.toOutput(alert);
+    }
+
+    @Override
+    public void unlinkAlertFromRoutine(Long id, Long alertId) {
+
+    }
+
+
 }
