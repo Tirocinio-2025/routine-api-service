@@ -1,9 +1,13 @@
 package tech.aesys.finale.routine.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "routine")
 public class Routine {
@@ -22,27 +26,4 @@ public class Routine {
     private List<Alert> alerts;
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNomeRoutine() {
-        return nomeRoutine;
-    }
-
-    public void setNomeRoutine(String nomeRoutine) {
-        this.nomeRoutine = nomeRoutine;
-    }
-
-    public List<Alert> getAlerts() {
-        return alerts;
-    }
-
-    public void setAlerts(List<Alert> alerts) {
-        this.alerts = alerts;
-    }
 }

@@ -11,15 +11,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tech.aesys.finale.routine.dto.request.LinkAlertToRoutineRequest;
 import tech.aesys.finale.routine.service.RoutineService;
+import tech.aesys.finale.routine.swagger.api.RoutinesApi;
 import tech.aesys.finale.routine.swagger.model.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api")
-public class RoutineController {
+public class RoutineController implements RoutinesApi {
 
 
     private final RoutineService routineService;
@@ -202,85 +202,6 @@ public class RoutineController {
     }
 
 
-    /**
-     * POST /routines/{id}/alerts : associa un Alert alla Routine
-     * Associa un alert esistente avente id passato nel body ad una routine specificata tramite il parametro id
-     *
-     * @param id                        ID della routine (required)
-     * @param linkAlertToRoutineRequest (required)
-     * @return alert associato con successo alla routine (status code 201)
-     * or invalid input (status code 400)
-     * or routine or alert not found (status code 404)
-     * or errore interno del server (status code 500)
-     */
-    @Operation(
-            operationId = "linkAlertToRoutine",
-            summary = "associa un Alert alla Routine",
-            description = "Associa un alert esistente avente id passato nel body ad una routine specificata tramite il parametro id",
-            tags = {"associazione Alert Routine"},
-            responses = {
-                    @ApiResponse(responseCode = "201", description = "alert associato con successo alla routine", content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = AlertOutput.class))
-                    }),
-                    @ApiResponse(responseCode = "400", description = "invalid input"),
-                    @ApiResponse(responseCode = "404", description = "routine or alert not found"),
-                    @ApiResponse(responseCode = "500", description = "errore interno del server")
-            }
-    )
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = "/routines/{id}/alerts",
-            produces = {"application/json"},
-            consumes = {"application/json"}
-    )
-
-    public ResponseEntity<AlertOutput> linkAlertToRoutine(
-            @Parameter(name = "id", description = "ID della routine", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id,
-            @Parameter(name = "LinkAlertToRoutineRequest", description = "", required = true) @Valid @RequestBody LinkAlertToRoutineRequest linkAlertToRoutineRequest
-    ) {
-        return ResponseEntity.status(501).build();
-    }
-
-
-    /**
-     * PATCH /routines/{id} : patch Routine
-     * aggiorna parzialmente la Routine avente id passato col body della request
-     *
-     * @param id           ID della routine (required)
-     * @param routineInput (required)
-     * @return routine aggiornata (status code 200)
-     * or invalid input (status code 400)
-     * or routine not found (status code 404)
-     * or errore interno del server (status code 500)
-     */
-    @Operation(
-            operationId = "patchRoutine",
-            summary = "patch Routine",
-            description = "aggiorna parzialmente la Routine avente id passato col body della request",
-            tags = {"Routine"},
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "routine aggiornata", content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = RoutineOutput.class))
-                    }),
-                    @ApiResponse(responseCode = "400", description = "invalid input"),
-                    @ApiResponse(responseCode = "404", description = "routine not found"),
-                    @ApiResponse(responseCode = "500", description = "errore interno del server")
-            }
-    )
-    @RequestMapping(
-            method = RequestMethod.PATCH,
-            value = "/routines/{id}",
-            produces = {"application/json"},
-            consumes = {"application/json"}
-    )
-
-    public ResponseEntity<RoutineOutput> patchRoutine(
-            @Parameter(name = "id", description = "ID della routine", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id,
-            @Parameter(name = "RoutineInput", description = "", required = true) @Valid @RequestBody RoutineInput routineInput
-    ) {
-        return ResponseEntity.status(501).build();
-    }
-
 
     /**
      * DELETE /routines/{id}/alerts/{alertId} : elimina un Alert da una Routine
@@ -312,7 +233,27 @@ public class RoutineController {
             @Parameter(name = "id", description = "ID della routine", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id,
             @Parameter(name = "alertId", description = "ID dell'alert", required = true, in = ParameterIn.PATH) @PathVariable("alertId") Long alertId
     ) {
-        return ResponseEntity.status(501).build();
+        routineService.unlinkAlertFromRoutine(id, alertId);
+        return ResponseEntity.noContent().build();
     }
 
+
+    /**
+     * POST /routines/{id}/alerts : crea un Alert e lo associa alla Routine
+     * crea una nuova risorsa Alert a partire dal body e la associa alla Routine identificata da id
+     *
+     * @param id         ID della routine (required)
+     * @param alertInput (required)
+     * @return alert creato e associato con successo alla routine (status code 201)
+     * or invalid input (status code 400)
+     * or routine not found (status code 404)
+     * or errore interno del server (status code 500)
+     */
+    @Override
+    public ResponseEntity<AlertOutput> createAlertForRoutine(Long id, AlertInput alertInput) {
+
+        AlertOutput response = routineService.createAlertForRoutine(id, alertInput);
+
+        return ResponseEntity.ok().body(response);
+    }
 }
