@@ -114,93 +114,6 @@ paths:
           description: routine not found
         "500":
           description: errore interno del server
-    patch:
-      summary: patch Routine
-      description: aggiorna parzialmente la Routine avente id passato col body della request
-      tags: [Routine]
-      operationId: patchRoutine
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          description: ID della routine
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RoutineInput"
-            example:
-              nomeRoutine: "mattina-lavoro-aggiornata"
-              alerts:
-                - oraInizio: "06:35"
-                  oraFine: "06:50"
-                  citta: "Silvi"
-                  tipoMessaggio: "Sveglia aggiornata"
-                  codici:
-                    - 1003
-      responses:
-        "200":
-          description: routine aggiornata
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RoutineOutput"
-        "400":
-          description: invalid input
-        "404":
-          description: routine not found
-        "500":
-          description: errore interno del server
-    put:
-      summary: replace Routine
-      description: sostituisce completamente la Routine avente id passato, se non esiste la crea
-      tags: [Routine]
-      operationId: updateRoutine
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          description: ID della routine
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RoutineInput"
-            example:
-              nomeRoutine: "mattina-lavoro-completa"
-              alerts:
-                - oraInizio: "06:30"
-                  oraFine: "06:45"
-                  citta: "Silvi"
-                  tipoMessaggio: "Sveglia mattutina"
-                  codici:
-                    - 1001
-      responses:
-        "200":
-          description: routine sostituita
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RoutineOutput"
-        "201":
-          description: routine creata con successo
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RoutineOutput"
-        "400":
-          description: invalid input
-        "500":
-          description: errore interno del server
-
   /alerts:
     get:
       summary: recupera tutti gli Alert
@@ -404,47 +317,6 @@ paths:
         "500":
           description: errore interno del server
     post:
-      summary: associa un Alert alla Routine
-      description: Associa un alert esistente avente id passato nel body ad una routine specificata tramite il parametro id
-      operationId: linkAlertToRoutine
-      tags: [associazione Alert Routine]
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          description: ID della routine
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                alertId:
-                  type: integer
-                  format: int64
-                  description: ID dell'alert
-              required:
-                - alertId
-            example:
-              alertId: 123
-      responses:
-        "201":
-          description: alert associato con successo alla routine
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AlertOutput"
-        "400":
-          description: invalid input
-        "404":
-          description: routine or alert not found
-        "500":
-          description: errore interno del server
-    put:
       summary: crea un Alert e lo associa alla Routine
       description: crea una nuova risorsa Alert a partire dal body e la associa
         alla Routine identificata da id
@@ -591,4 +463,3 @@ components:
           items:
             type: integer
             format: int64
-
