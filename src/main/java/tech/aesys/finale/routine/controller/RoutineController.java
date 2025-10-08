@@ -250,7 +250,7 @@ public class RoutineController implements RoutinesApi {
      * or errore interno del server (status code 500)
      */
     @Override
-    public ResponseEntity<AlertOutput> createAlertForRoutine(Long id, AlertInput alertInput) {
+    public ResponseEntity<AlertOutput> createAlertForRoutine(@PathVariable("id") Long id, @RequestBody AlertInput alertInput) {
 
         AlertOutput response = routineService.createAlertForRoutine(id, alertInput);
 

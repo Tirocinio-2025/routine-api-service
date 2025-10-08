@@ -2,6 +2,7 @@ package tech.aesys.finale.routine.service;
 
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tech.aesys.finale.routine.exception.RoutineNonTrovataException;
 import tech.aesys.finale.routine.mapper.AlertMapper;
@@ -20,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class RoutineServiceImpl implements RoutineService {
 
@@ -124,16 +126,20 @@ public class RoutineServiceImpl implements RoutineService {
 
     @Override
     public AlertOutput createAlertForRoutine(Long id, AlertInput alertInput) {
-        Routine routine = routineRepository.findById(id).orElseThrow(() -> new RoutineNonTrovataException("Routine con id " + id + " non trovata"));
-        Alert alert = alertMapper.toEntity(alertInput);
-        routine.getAlerts().add(alert);
-        alert.setRoutine(routine);
+        Alert alert = null;
+        try {
+            Routine routine = routineRepository.findById(id).orElseThrow(() -> new RoutineNonTrovataException("Routine con id " + id + " non trovata"));
+            alert = alertMapper.toEntity(alertInput);
+            routine.getAlerts().add(alert);
+            alert.setRoutine(routine);
 
-        alert = alertRepository.save(alert);
+            joinAlertWeatherCodes(alert, alertInput.getCodici());
 
-        joinAlertWeatherCodes(alert, alertInput.getCodici());
-
-        alert = alertRepository.save(alert);
+            alert = alertRepository.save(alert);
+        } catch (Exception e) {
+            log.error("Errore durante la creazione dell'alert per la routine con id " + id, e);
+            throw e;
+        }
 
         return alertMapper.toOutput(alert);
     }
