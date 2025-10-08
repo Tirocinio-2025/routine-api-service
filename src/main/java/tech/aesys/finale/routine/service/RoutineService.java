@@ -15,7 +15,6 @@ public interface RoutineService {
     List<AlertOutput> getAlertsForRoutine(Long id);
     List<RoutineOutput> getAllRoutines();
     RoutineOutput getRoutineById(Long id);
-    RoutineOutput patchRoutine(Long id, RoutineInput routineInput);
 
 
 }

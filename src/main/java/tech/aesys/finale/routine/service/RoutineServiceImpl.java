@@ -16,7 +16,6 @@ import tech.aesys.finale.routine.swagger.model.AlertOutput;
 import tech.aesys.finale.routine.swagger.model.RoutineInput;
 import tech.aesys.finale.routine.swagger.model.RoutineOutput;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -96,7 +95,7 @@ public class RoutineServiceImpl implements RoutineService {
 
 
     @Override
-    public void deleteRoutine(Long id) {
+    public void deleteRoutine(Long id) throws RoutineNonTrovataException {
         Routine routine = routineRepository.findById(id).orElseThrow(() -> new RoutineNonTrovataException("Routine con id " + id + " non trovata"));
         routineRepository.delete(routine);
 
@@ -118,24 +117,9 @@ public class RoutineServiceImpl implements RoutineService {
     }
 
     @Override
-    public RoutineOutput getRoutineById(Long id) {
+    public RoutineOutput getRoutineById(Long id) throws RoutineNonTrovataException {
         Routine routine = routineRepository.findById(id).orElseThrow(() -> new RoutineNonTrovataException("Routine con id " + id + " non trovata"));
         return routineMapper.toOutput(routine);
-    }
-
-    @Override
-    public RoutineOutput patchRoutine(Long id, RoutineInput routineInput) {
-
-        List<Alert> list = new ArrayList<>();
-        for (AlertInput alert : routineInput.getAlerts()) {
-            list.add(alertMapper.toEntity(alert));
-        }
-        Routine routine = routineRepository.findById(id).orElseThrow(() -> new RoutineNonTrovataException("Routine con id " + id + " non trovata"));
-        routine = routineMapper.toEntity(routineInput);
-        routine.setAlerts(list);
-        routineRepository.saveAndFlush(routine);
-        return routineMapper.toOutput(routine);
-
     }
 
 }

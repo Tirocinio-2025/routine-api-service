@@ -23,8 +23,7 @@ public interface AlertMapper {
     @Mapping(source = "tipoMessaggio", target = "testoNotifica")
     Alert toEntity(AlertInput alertInput);
 
-    @Mapping(source = "codici", target = "codici", qualifiedByName = "mapAlertWeatherCodeToLong")
-    @Mapping(target = "tipoMessaggio", source = "testoNotifica")
+    @Mapping(source = "codici", target = "codici", qualifiedByName = "mapCodici")
     AlertOutput toOutput(Alert alert);
 
     @Named("mapAlertWeatherCodeToLong")
