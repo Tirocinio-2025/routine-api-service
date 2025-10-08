@@ -11,7 +11,7 @@ import tech.aesys.finale.routine.exception.AlertNotFoundException;
 import java.net.URI;
 
 @Slf4j
-@ControllerAdvice
+@ControllerAdvice( assignableTypes = AlertController.class)
 public class AlertExceptionController {
 
     @ExceptionHandler(AlertNotFoundException.class)

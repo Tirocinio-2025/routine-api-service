@@ -42,14 +42,14 @@ public class AlertServiceImpl implements AlertService {
     }
 
     private Set<AlertWeatherCode> createAlertWeatherCodes(Alert alert, List<Long> codiciInput) {
-        // Carica i WeatherCode dal database
+
         List<WeatherCode> weatherCodes = weatherCodeRepository.findAllByCodeIn(codiciInput);
 
-        // Crea una mappa per accesso rapido
+
         Map<Long, WeatherCode> weatherCodeMap = weatherCodes.stream()
                 .collect(Collectors.toMap(WeatherCode::getCode, Function.identity()));
 
-        // Crea gli AlertWeatherCode con tutte le relazioni corrette
+
         Set<AlertWeatherCode> alertWeatherCodes = new HashSet<>();
         for (Long code : codiciInput) {
             WeatherCode weatherCode = weatherCodeMap.get(code);

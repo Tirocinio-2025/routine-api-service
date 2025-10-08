@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import tech.aesys.finale.routine.exception.RoutineNonTrovataException;
-
 @Slf4j
-@ControllerAdvice
+@ControllerAdvice(assignableTypes = RoutineController.class)
 public class RoutineExceptionHandler {
 
     @ExceptionHandler(RoutineNonTrovataException.class)
