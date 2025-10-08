@@ -147,6 +147,15 @@ public class RoutineServiceImpl implements RoutineService {
     @Override
     public void unlinkAlertFromRoutine(Long id, Long alertId) {
 
+       Routine routine = routineRepository.findById(id).orElseThrow(() -> new RoutineNonTrovataException("Routine con id " + id + " non trovata"));
+       Alert alert = alertRepository.findById(alertId).orElseThrow(() -> new RuntimeException("Alert con id " + alertId + " non trovato"));
+        if (!alert.getRoutine().getId().equals(routine.getId())) {
+            throw new RuntimeException("Alert con id " + alertId + " non appartiene alla routine con id " + id);
+        } else {
+            alert.setRoutine(null);
+            alertRepository.save(alert);
+        }
+
     }
 
 
