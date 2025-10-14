@@ -4,11 +4,8 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tech.aesys.finale.routine.dto.condition.CurrentCondition;
-import tech.aesys.finale.routine.model.Routine;
-import tech.aesys.finale.routine.repository.AlertWeatherCodeRepository;
 import tech.aesys.finale.routine.repository.WeatherCodeRepository;
-import tech.aesys.finale.routine.swagger.model.RoutineInput;
-import tech.aesys.finale.routine.swagger.model.RoutineOutput;
+
 
 import java.util.List;
 
