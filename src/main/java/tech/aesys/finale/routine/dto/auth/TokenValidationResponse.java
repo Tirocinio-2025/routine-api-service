@@ -1,0 +1,18 @@
+package tech.aesys.finale.routine.dto.auth;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class TokenValidationResponse {
+    private boolean valid;
+    private String username;
+    private List<String> roles;
+    private String message;
+}
+
